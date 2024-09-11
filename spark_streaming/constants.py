@@ -1,22 +1,29 @@
+# ------------------------------------------------------------ #
+#  Version    : 0.1    							               #
+#  Created On : 12-Sept-2024 0:38:39                           #
+#  Created By : Nikit Gokhale                                  #
+#  Script     : Python                                         #
+#  Notes      : Script to parse PostgreSQL configurations      #
+# ------------------------------------------------------------ #
+
 import configparser
 import os
 
-parser = configparser.ConfigParser()
-parser.read(os.path.join(os.path.dirname(__file__), '../config/config.conf'))
+# This section generates configuration for the PostgreSQL database connection
+def load_postgres_config(section='postgreSQL'):
+    parser = configparser.ConfigParser()
+    parser.read(os.path.join(os.path.dirname(__file__), '../config/config.conf'))
+    # Get section default to PostgreSQL
+    config = {}
+    if parser.has_section(section):
+        params = parser.items(section)
+        for param in params:
+            config[param[0]] = param[1]
+    else:
+        raise Exception('Section {0} not found in the configuration file'.format(section))
+    
+    return config
 
-# AWS
-AWS_ACCESS_KEY        = parser.get('aws', 'aws_access_key_id')
-AWS_SECRET_KEY        = parser.get('aws', 'aws_secret_access_key')
-AWS_SESSION_TOKEN_KEY = parser.get('aws', 'aws_session_token_key')
-AWS_REGION            = parser.get('aws', 'aws_session_token_key')
-AWS_S3_BUCKET         = parser.get('aws', 'aws_s3_bucket_name')
-AWS_S3_TEMP_DIR       = parser.get('aws', 's3_data_directory')
-
-# AWS Redshift
-REDSHIFT_JDBC_URL = parser.get('aws', 'jdbc_url')
-REDSHIFT_DB_NAME  = parser.get('aws', 'redshift_db_name')
-REDSHIFT_DB_USER  = parser.get('aws', 'redshift_db_username')
-REDSHIFT_DB_PASS  = parser.get('aws', 'redshift_db_pass')
-
-# AWS IAM ROLE
-AWS_IAM_ROLE = parser.get('aws', 'iam_role')
+if __name__ == '__main__':
+    pg_config = load_postgres_config()
+    print(pg_config)

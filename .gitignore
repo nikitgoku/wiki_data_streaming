@@ -3,3 +3,7 @@ jarfiles/
 jdbc_driver/
 *.ipynb
 *.conf
+cassandra-data/
+spark_streaming/__pycache__/
+*.pyc
+config/
